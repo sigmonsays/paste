@@ -63,6 +63,7 @@ type Paste struct {
 }
 
 func (me *Paste) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Printf("%s %s %s", r.RemoteAddr, r.Method, r.URL)
 	me.mux.ServeHTTP(w, r)
 }
 
@@ -76,7 +77,7 @@ var IndexPage = `
 client
 <pre>
 #!/bin/bash
-paste() { curl -d@- http://{{.Server}}/paste ;  }
+paste() { curl --data-binary @- http://{{.Server}}/paste ;  }
 </pre>
 
 Usage:
@@ -107,6 +108,7 @@ func (me *Paste) Index(w http.ResponseWriter, r *http.Request) {
 
 func (me *Paste) Error(w http.ResponseWriter, r *http.Request, s string, args ...interface{}) {
 	w.WriteHeader(400)
+	log.Printf("Error %s\n", fmt.Sprintf(s, args...))
 	fmt.Fprintf(w, s, args...)
 }
 
@@ -127,7 +129,7 @@ func (me *Paste) Paste(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
-	_, err = io.Copy(f, r.Body)
+	written, err := io.Copy(f, r.Body)
 	if err != nil {
 		me.Error(w, r, "read request: %s", err)
 		return
@@ -139,6 +141,9 @@ func (me *Paste) Paste(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "see %s\n", location)
 	h := w.Header()
 	h.Set("Location", location)
+
+	log.Printf("%s %s %s written=%d location=%s",
+		r.RemoteAddr, r.Method, r.URL, written, location)
 
 }
 
@@ -163,7 +168,12 @@ func (me *Paste) PasteId(w http.ResponseWriter, r *http.Request) {
 	// TODO: deal with content types
 	w.Header().Set("Content-Type", "text/plain")
 
-	io.Copy(w, f)
+	_, err = io.Copy(w, f)
+	if err != nil {
+		w.WriteHeader(403)
+		me.Error(w, r, "error: %s: %s\n", id, err)
+		return
+	}
 }
 
 var (
