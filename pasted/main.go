@@ -84,6 +84,10 @@ Usage:
 <pre>
 % echo whatever | paste
 </pre>
+<p/>
+
+<small><a href="http://github.com/sigmonsays/paste">github</a></small>
+
 </body>
 </html>
 `
