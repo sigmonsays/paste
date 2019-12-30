@@ -1,7 +1,0 @@
-#!/bin/bash
-mkdir -pv $HOME/tmp
-cd $HOME/tmp
-wget https://godeb.s3.amazonaws.com/godeb-amd64.tar.gz -O godeb-amd64.tar.gz
-
-tar vzxf godeb-amd64.tar.gz
-./godeb install
