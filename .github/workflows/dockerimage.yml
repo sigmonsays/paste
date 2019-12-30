@@ -7,12 +7,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
-
-    - uses: actions/checkout@master
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
-      with:
+     - uses: actions/checkout@master
+     - name: Publish to Registry
+       uses: elgohr/Publish-Docker-Github-Action@master
+       with:
         name: sigmonsays/paste
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
