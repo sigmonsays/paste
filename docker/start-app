@@ -1,0 +1,7 @@
+#!/bin/bash
+export HOME=/home/app
+export USER=app
+export GOPATH=$HOME/go
+cd $HOME
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+exec ./go/bin/pasted -bindaddr :7001 $@
