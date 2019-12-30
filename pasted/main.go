@@ -27,6 +27,8 @@ func main() {
 	flag.StringVar(&opts.DataDir, "data", opts.DataDir, "location of paste data")
 	flag.Parse()
 
+	os.MkdirAll(opts.DataDir, 0755)
+
 	h := NewPasteHandler(opts)
 
 	log.Printf("serving at %s\n", opts.BindAddr)
