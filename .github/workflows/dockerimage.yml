@@ -8,9 +8,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag sigmonsays/paste
-        docker push sigmonsays/paste
+
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: sigmonsays/paste
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
