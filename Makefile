@@ -1,23 +1,28 @@
-.PHONY: docker
+.PHONY: install
 
-GIT_VER = $(shell git describe --tags )
+TOPDIR = $(shell pwd)
 
-help:
-	# try something else
-	#
-	# available targets
-	# 
-	#   docker        build docker iamge (version $(GIT_VER))
-	#
-docker:
-	docker build -t paste:latest .
-	docker tag paste:latest paste:$(GIT_VER)
+export GOWORKSPACE := $(shell pwd)
+export GOBIN := $(GOWORKSPACE)/bin
+export GO111MODULE := on
 
-docker-push:
-	# Push latest
-	docker tag paste:latest sigmonsays/paste:latest
-	docker tag paste:latest sigmonsays/paste:$(GIT_VER)
+GO_BINS =
+GO_BINS += pasted
 
-	# Push version
-	docker push sigmonsays/paste
-	docker push sigmonsays/paste:$(GIT_VER)
+all:
+	$(MAKE) compile
+
+compile:
+	mkdir -p tmp
+	mkdir -p $(GOBIN)
+	go install github.com/...
+
+install:
+	mkdir -p $(DESTDIR)/$(INSTALL_PREFIX)/bin/ 
+	$(MAKE) install-bins
+
+install-bins: $(addprefix installbin-, $(GO_BINS))
+
+$(addprefix installbin-, $(GO_BINS)):
+	$(eval BIN=$(@:installbin-%=%))
+	cp -v $(GOBIN)/$(BIN) $(DESTDIR)/$(INSTALL_PREFIX)/bin/
