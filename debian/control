@@ -1,11 +1,11 @@
-Source: paste
+Source: pasted
 Section: go
 Priority: extra
 Maintainer: Sig Lange <noreply@example.com>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
 
-Package: paste
+Package: pasted
 Architecture: any
 Pre-Depends: dpkg (>= 1.16.1), ${misc:Pre-Depends}
 Depends:  ${misc:Depends}
